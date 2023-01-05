@@ -1,0 +1,26 @@
+{
+  "name": "kebab-case",
+  "version": "1.0.0",
+  "description": "Task Labecommerce do bootCamp da Labenu",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Afmjuniors/labecommerce-backend.git"
+  },
+  "keywords": [
+    "ecommerce",
+    "labenu",
+    "backend"
+  ],
+  "author": "Alexandre Machado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Afmjuniors/labecommerce-backend/issues"
+  },
+  "homepage": "https://github.com/Afmjuniors/labecommerce-backend#readme"
+}
