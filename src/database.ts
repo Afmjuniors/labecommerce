@@ -1,4 +1,7 @@
-import { TProduct, TPurchase, TUser } from "./types";
+import { Category, TProduct, TPurchase, TUser } from "./types";
+
+
+
 
 export const users: TUser[] = [
     {
@@ -19,13 +22,13 @@ export const products: TProduct[] = [
         id: '1',
         name: 'produto1',
         price: 10,
-        category: 'categoria1'
+        category: Category.ACCESSORIES
     },
     {
         id: '2',
         name: 'produto2',
         price: 20,
-        category: 'categoria2'
+        category: Category.ELECTRONICS
     },
 ]
 
@@ -43,3 +46,62 @@ export const purchaseHistory: TPurchase[] = [
         totalPrice: 40
     },
 ]
+
+
+export function createUser (id:string, email:string, password:string):void{
+const newUser:TUser = {
+    id,
+    email,
+    password
+}
+console.log("Cadastro realisado com sucesso")
+}
+export function getAllUsers () : Array<TUser>{
+    
+    return users 
+}
+
+
+export function createProduct(id:string, name:string, price:number, category:Category):void{
+    const newProduct: TProduct ={
+        id,
+        name,
+        price,
+        category
+    }
+    console.log("Produto criado com sucesso")
+}
+
+export function getAllProducts () : Array<TProduct>{
+    
+    return products 
+}
+
+export function getProductById (id:string): Array<TProduct>{
+    return products.filter((product:TProduct) => product.id===id)
+
+}
+
+
+export function queryProductsByName (q:string) : Array<TProduct>{
+return products.filter((product:TProduct)=>{
+    return product.name.toLowerCase().includes(q.toLowerCase())
+})
+}
+
+
+export function createPurchase (userId:string, productId:string,quantity:number, totalPrice:number):void{
+const newPurchase: TPurchase={
+    userId,
+    productId,
+    quantity,
+    totalPrice
+}
+
+
+    console.log("Compra realaizada com sucesso")
+}
+
+export function getAllPurchasesFromUserId(userId:string):Array<TPurchase>{
+    return purchaseHistory.filter((purchase:TPurchase)=> purchase.userId===userId)
+}
