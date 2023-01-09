@@ -8,5 +8,6 @@
     "removeComments": true, /* Do not emit comments to output. */
     "noImplicitAny": true, /* Raise error on declarations with an implied 'any' type. */
     "noEmitOnError": true, /* Disable emitting files if any type checking errors are reported. */
+    "esModuleInterop": true
   }
 }

@@ -47,30 +47,12 @@ export const purchaseHistory: TPurchase[] = [
     },
 ]
 
-
-export function createUser (id:string, email:string, password:string):void{
-const newUser:TUser = {
-    id,
-    email,
-    password
-}
-console.log("Cadastro realisado com sucesso")
-}
 export function getAllUsers () : Array<TUser>{
     
     return users 
 }
 
 
-export function createProduct(id:string, name:string, price:number, category:Category):void{
-    const newProduct: TProduct ={
-        id,
-        name,
-        price,
-        category
-    }
-    console.log("Produto criado com sucesso")
-}
 
 export function getAllProducts () : Array<TProduct>{
     
@@ -103,5 +85,5 @@ const newPurchase: TPurchase={
 }
 
 export function getAllPurchasesFromUserId(userId:string):Array<TPurchase>{
-    return purchaseHistory.filter((purchase:TPurchase)=> purchase.userId===userId)
+    return purchaseHistory.filter((purchase)=> purchase.userId===userId)
 }
