@@ -47,31 +47,31 @@ export const purchaseHistory: TPurchase[] = [
     },
 ]
 
-export function getAllUsers () : Array<TUser>{    
-    return users 
+export function getAllUsers(): Array<TUser> {
+    return users
 }
 
-export function getUserById (id:string) : TUser{
-    const user = users.find((user)=>user.id===id)
+export function getUserById(id: string) {
+    const user = users.find((user) => user.id === id)
     return user
 }
 
-export function getAllProducts () : Array<TProduct>{    
-    return products 
+export function getAllProducts(): Array<TProduct> {
+    return products
 }
 
-export function getProductById (id:string): TProduct{
-    return products.find((product) => product.id===id)
-}
-
-
-export function queryProductsByName (q:string) : Array<TProduct>{
-return products.filter((product:TProduct)=>{
-    return product.name.toLowerCase().includes(q.toLowerCase())
-})
+export function getProductById(id: string) {
+    return products.find((product) => product.id === id)
 }
 
 
-export function getAllPurchasesFromUserId(userId:string):Array<TPurchase>{
-    return purchaseHistory.filter((purchase)=> purchase.userId===userId)
+export function queryProductsByName(q: string): Array<TProduct> {
+    return products.filter((product: TProduct) => {
+        return product.name.toLowerCase().includes(q.toLowerCase())
+    })
+}
+
+
+export function getAllPurchasesFromUserId(userId: string): Array<TPurchase> {
+    return purchaseHistory.filter((purchase) => purchase.userId === userId)
 }
