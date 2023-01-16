@@ -82,11 +82,7 @@ app.post('/users', (req: Request, res: Response) => {
 app.delete('/user/:id', (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        if (id.length > 0) {
-            res.status(400)
-            throw new Error("id esta vazio");
 
-        }
         const indexUser = users.findIndex((user) => user.id === id)
 
         if (indexUser >= 0) {
@@ -197,11 +193,7 @@ app.get('/products/search', (req: Request, res: Response) => {
 app.get('/product/:id', (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        if (id.length > 0) {
-            res.status(400)
-            throw new Error("id esta vazio");
 
-        }
         const avalibleID = products.find((product) => product.id === id)
         console.log(avalibleID)
         if (avalibleID) {
@@ -274,11 +266,7 @@ app.post('/products', (req: Request, res: Response) => {
 app.delete('/product/:id', (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        if (id.length > 0) {
-            res.status(400)
-            throw new Error("id esta vazio");
 
-        }
         const indexProduct = products.findIndex((product) => product.id === id)
 
         if (indexProduct >= 0) {
