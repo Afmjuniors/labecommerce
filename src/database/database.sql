@@ -63,7 +63,9 @@ WHERE id='p01';
 
 --getPurchaseByUserId
 SELECT * FROM purchases
-WHERE buyer_id='u01';
+INNER JOIN users
+ON purchases.buyer_id = users.id
+WHERE buyer_id ='u01';
 
 --deleteUserByID
 DELETE FROM users WHERE id='u01';
@@ -106,3 +108,15 @@ LIMIT 20 OFFSET 0;
 SELECT * FROM products
 WHERE price>=1 AND price <=20
 ORDER BY price ASC;
+
+CREATE TABLE testes (
+    id INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    date INTEGER,
+    datetime TEXT 
+    );
+
+INSERT INTO testes(id,date,datetime)
+VALUES(1,DATE('now'),DATETIME('now'));
+
+SELECT * FROM testes;
+
