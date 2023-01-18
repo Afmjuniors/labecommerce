@@ -164,7 +164,7 @@ app.get('/products', (req: Request, res: Response) => {
         res.send(error.message)
     }
 })
-
+//getProductByName
 app.get('/products/search', (req: Request, res: Response) => {
 
 

@@ -66,9 +66,8 @@ export function getProductById(id: string) {
 
 
 export function queryProductsByName(q: string): Array<TProduct> {
-    return products.filter((product: TProduct) => {
-        return product.name.toLowerCase().includes(q.toLowerCase())
-    })
+    return products.filter((product: TProduct) => product.name.toLowerCase().includes(q.toLowerCase())
+    )
 }
 
 
