@@ -1,5 +1,5 @@
 -- Active: 1673961752633@@127.0.0.1@3306
--
+
 CREATE TABLE users (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
@@ -11,7 +11,6 @@ CREATE TABLE products (
     price REAL NOT NULL,
     category TEXT NOT NULL
 );
-
 CREATE TABLE purchases (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     total_price REAL NOT NULL,
@@ -20,6 +19,19 @@ CREATE TABLE purchases (
     buyer_id TEXT NOT NULL,
     FOREIGN KEY (buyer_id) REFERENCES users(id)
 );
+CREATE TABLE purchases_products(
+    purchase_id TEXT NOT NULL,
+    product_id TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    FOREIGN KEY (purchase_id) REFERENCES purchases(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+DROP TABLE purchases_products;
+DROP TABLE purchases;
+DROP TABLE products;
+DROP TABLE users;
+
 
 
 PRAGMA table_info("users");
@@ -56,6 +68,12 @@ VALUES
 ('ph005',10.99,0,'u03'),
 ('ph006',11.99,0,'u03');
 
+--createNewPurchase_product
+INSERT INTO purchases_products(purchase_id,product_id,quantity)
+VALUES
+('ph001','p01',2),
+('ph002','p01',3),
+('ph006','p05',1);
 
 --getProductByID
 SELECT * FROM products
@@ -66,6 +84,14 @@ SELECT * FROM purchases
 INNER JOIN users
 ON purchases.buyer_id = users.id
 WHERE buyer_id ='u01';
+
+--getPurchaseHistoryComplete
+SELECT * FROM products
+INNER JOIN purchases_products
+ON products.id=purchases_products.product_id
+INNER JOIN purchases
+ON purchases.id=purchases_products.purchase_id;
+
 
 --deleteUserByID
 DELETE FROM users WHERE id='u01';
