@@ -25,7 +25,9 @@ VALUES
 ("u003","Andre","andre@gmail.com","1a@A"),
 ("u004","Bernardo","bernardo@mail.com","1a@A"),
 ("u005","Maria","maria@gmail.com","1a@A");
-
+INSERT INTO users (id,name,email,password)
+VALUES
+("u006","aaaa","aaaaaa@gmail.com","1aaa@A");
 --editUserByID
 UPDATE users 
 SET 
