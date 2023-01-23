@@ -47,11 +47,11 @@ ON users.id=purchases.buyer_id;
 
 
 SELECT * FROM products
-INNER JOIN purchases_products
+LEFT JOIN purchases_products
 ON products.id=purchases_products.product_id
-INNER JOIN purchases
+LEFT JOIN purchases
 ON purchases.id=purchases_products.purchase_id
-INNER JOIN users
+LEFT JOIN users
 ON users.id=purchases.buyer_id;
 
 
