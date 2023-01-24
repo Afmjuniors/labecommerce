@@ -398,11 +398,39 @@ app.post('/purchase',  async (req: Request, res: Response) => {
     }
 
 })
+//CRIAR uma purchase_product
+app.post('/purchase/:id' ,async (req:Request, res:Response)=>{
+    try {
+        const purchaseID = req.params.id
+        const {productID, quantity} = req.body
+        const [product] = await db.raw(`SELECT * FROM products WHERE id = "${productID}";`)
+        let subTotal = 0;
+        if(!product){
+            res.status(404)
+            throw new Error("Produto não encontrado");
+        }else{
+            subTotal = product.price * quantity
+        }
+        if(quantity<1){
+            res.status(400)
+            throw new Error("Quantidade tem que ser maior que 1");
+        }
+        await db.raw(`
+        INSERT INTO purchases_products(purchase_id, product_id,quantity,subtotal)
+        VALUES("${purchaseID}","${productID}","${quantity}","${subTotal}")`)
+        res.status(201).send("Purchase criada")
+    } catch (error:any) {
+        if (res.statusCode === 200) {
+            res.status(500)
+        }
+        res.send(error.message)
+    }
+})
 
 app.get('/user/:id/purchase/',  async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const arrayPurchaseHistory = purchaseHistory.filter((purchase) => purchase.userId === id)
+        const arrayPurchaseHistory = [purchaseHistory.filter((purchase) => purchase.buyerID === id)]
         const avalibleID = users.find((user) => user.id === id)
         if (!avalibleID) {
             res.status(400)
