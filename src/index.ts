@@ -28,8 +28,7 @@ app.get('/users', async (req: Request, res: Response) => {
         let limit = Number(req.query.limit) as number | undefined
         let offset = Number(req.query.offset) as number | undefined
         
-        if(!limit){
-           
+        if(!limit){           
             limit=20
         }
         if(!offset){
@@ -37,17 +36,15 @@ app.get('/users', async (req: Request, res: Response) => {
         }
         if(typeof limit !== "number"){
             res.status(400)
-            throw new Error("Limit tem que ser um number");
-            
+            throw new Error("Limit tem que ser um number");    
         }
         if(typeof offset !== "number"){
             res.status(400)
-            throw new Error("Offset tem que ser um number");
-            
+            throw new Error("Offset tem que ser um number");            
         }
         if(!name){
             const [count] = await db("users").count("name")
-            const result = await db("users")
+            const result : TUser[] | undefined[]= await db("users")
             .select("id","name","email","password","create_at AS createAt","modified_at AS modifiedAt")
             .offset(offset)
             .limit(limit)
@@ -63,16 +60,13 @@ app.get('/users', async (req: Request, res: Response) => {
             .offset(offset)
             .limit(limit)
             res.status(200).send({count:count["count(`name`)"],result})
-
         }
 
     } catch (error) {
         console.log(error)
-
         if (req.statusCode === 200) {
             res.status(500)
         }
-
         if (error instanceof Error) {
             res.send({message:error.message})
         } else {
@@ -108,7 +102,6 @@ app.post('/users', async (req: Request, res: Response) => {
         if (avalibleEmail) {
             res.status(422)
             throw new Error("Email ja utilizado em outro usuario");
-
         }
 
         if(!email.match(regexEmail)){
@@ -117,9 +110,9 @@ app.post('/users', async (req: Request, res: Response) => {
         }
         if(!password.match(regexPassword)){
             res.status(400)
-            throw new Error("password' deve possuir entre 8 e 12 caracteres, com letras maiúsculas e minúsculas e no mínimo um número e um caractere especial");
-            
+            throw new Error("password' deve possuir entre 8 e 12 caracteres, com letras maiúsculas e minúsculas e no mínimo um número e um caractere especial");   
         }
+
         const newUser = {
             id,
             name,
@@ -182,7 +175,7 @@ app.delete('/users/:id', async (req: Request, res: Response) => {
 app.put('/users/:id',  async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const { email, password } = req.body
+        const { email, password } = req.body as TUser
     
 
         if (email !== undefined) {
@@ -206,7 +199,7 @@ app.put('/users/:id',  async (req: Request, res: Response) => {
                 throw new Error("'password' deve possuir entre 8 e 12 caracteres, com letras maiúsculas e minúsculas e no mínimo um número e um caractere especial");
             }
         }
-        const [user] = await db("users").where({id:id})
+        const [user] : TUser[]  = await db("users").where({id:id})
 
         const updateUser ={
             email:email || user.email,
@@ -251,17 +244,15 @@ app.get('/products', async (req: Request, res: Response) => {
         }
         if(typeof limit !== "number"){
             res.status(400)
-            throw new Error("Limit tem que ser um number");
-            
+            throw new Error("Limit tem que ser um number");        
         }
         if(typeof offset !== "number"){
             res.status(400)
-            throw new Error("Offset tem que ser um number");
-            
+            throw new Error("Offset tem que ser um number");            
         }
         if(!name){
             const [count] = await db("products").count("name")
-            const result = await db("products")
+            const result : TProduct[] | undefined[] = await db("products")
             .select("id","name","price","description","url_image AS urlImage", "create_at AS createAt", "modified_at AS modifiedAt","category")
             .offset(offset)
             .limit(limit)
@@ -271,13 +262,12 @@ app.get('/products', async (req: Request, res: Response) => {
             const [count] = await db("products")
             .where("name","LIKE",`%${name}%`)
             .count("name")
-            const result = await db("products")
+            const result : TProduct[] | undefined[] = await db("products")
             .select("id","name","price","description","url_image AS urlImage", "create_at AS createAt", "modified_at AS modifiedAt","category")
             .where("name","LIKE",`%${name}%`)
             .offset(offset)
             .limit(limit)
             res.status(200).send({count:count["count(`name`)"],result})
-
         }
 
     } catch (error) {
@@ -299,10 +289,10 @@ app.get('/products/:id',  async (req: Request, res: Response) => {
     try {
         const id = req.params.id
 
-        const [avalibleID] = await db("products")
+        const [avalibleID] : TProduct[] = await db("products")
         .select("id","name","price","description","url_image AS urlImage", "create_at AS createAt", "modified_at AS modifiedAt","category")
         .where({id:id})
-        
+
         if (avalibleID) {
             res.status(200).send(avalibleID)
         } else {
@@ -358,11 +348,12 @@ app.post('/products', async (req: Request, res: Response) => {
             res.status(400)
             throw new Error(`Catgegoria tem que ser, ${Category.ACCESSORIES}, ${Category.CLOTHES_AND_SHOES} ou ${Category.ELECTRONICS}`);
         }
-        const [avalibleID] = await db("products").where({id:id})
+        const [avalibleID] : TProduct[] | undefined[]= await db("products").where({id:id})
         if (avalibleID) {
             res.status(422)
             throw new Error("Id de produto tem que ser unico");
         }
+
         const newProduct = {
             id,
             name,
@@ -374,13 +365,9 @@ app.post('/products', async (req: Request, res: Response) => {
             category
         }
 
-
-
         await db("products").insert(newProduct)
    
-       
         res.status(201).send({message:"Produto criado com sucesso",newProduct})
-
 
     } catch (error) {
         console.log(error)
@@ -402,7 +389,7 @@ app.delete('/products/:id',  async (req: Request, res: Response) => {
     try {
         const id = req.params.id
 
-        const [product] = await db("products").where({id:id})
+        const [product] :TProduct[] | undefined[]= await db("products").where({id:id})
 
         if (product) {
             await db("products").del().where({id:id})
@@ -502,19 +489,19 @@ app.put('/products/:id',  async (req: Request, res: Response) => {
 //purchase************************************************************
 app.post('/purchases',  async (req: Request, res: Response) => {
     try {
-        const id = req.body.id
-        const buyerID = req.body.buyerID
-        const purchaseProducts = req.body.purchaseProducts
-        const {productID, quantity} = purchaseProducts as {productID:string,quantity:number} 
+        const {id,buyerID} = req.body 
+        
+        const purchaseProducts = req.body.purchaseProducts 
+        const[{productID, quantity}] = purchaseProducts as {productID:string,quantity:number}[] 
 
-        const [avaliblePurID] = await db("purchases").where({id:id})
+        const [avaliblePurID] :TPurchase[] | undefined[]= await db("purchases").where({id:id})
         
         if(avaliblePurID){
             res.status(429)
             throw new Error("Purchase com id ja existente");
         }
       
-        if(purchaseProducts){
+        if(typeof purchaseProducts === "object"){
             if(purchaseProducts.length<=0){
                 res.status(400)
             throw new Error("É necessario ter ao menos uma compra");  
@@ -533,7 +520,6 @@ app.post('/purchases',  async (req: Request, res: Response) => {
                     res.status(400)
                     throw new Error("Quantidade da compra precisa ser um numero e maior que 0");   
                 }
-
             }
            
         }else{
@@ -547,7 +533,7 @@ app.post('/purchases',  async (req: Request, res: Response) => {
         }
       
         
-        const [avalibleID] = await db("users").where({id:buyerID})
+        const [avalibleID] : TUser[] | undefined[] = await db("users").where({id:buyerID})
         if (!avalibleID) {
             res.status(400)
             throw new Error("Não foi possivel achar o usuario pelo ID");
@@ -596,53 +582,8 @@ app.post('/purchases',  async (req: Request, res: Response) => {
     }
 
 })
-//CRIAR uma purchase_product
-// app.post('/purchase/:id' ,async (req:Request, res:Response)=>{
-//     try {
-//         const purchaseID = req.params.id
-//         const {productID, quantity} = req.body
 
-//         const [product] = await db("products").where({id:productID})
-//         let subTotal = 0;
-//         if(purchaseID[0]!=="c"){
-//             res.status(404)
-//             throw new Error("Id da compra comeca com c");
-//         }
-//         if(!product){
-//             res.status(404)
-//             throw new Error("Produto não encontrado");
-//         }else{
-//             subTotal = product.price * quantity
-//         }
-//         if(quantity<1){
-//             res.status(400)
-//             throw new Error("Quantidade tem que ser maior que 1");
-//         }
-//         const newPurchaseProduct = {
-//             purchase_id:purchaseID,
-//              product_id:productID,
-//              quantity,
-//              subtotal:subTotal
-//         }
-//         await db("purchases_products").insert(newPurchaseProduct)
-
-//         res.status(201).send("Purchase criada")
-
-//     } catch (error) {
-//         console.log(error)
-
-//         if (req.statusCode === 200) {
-//             res.status(500)
-//         }
-
-//         if (error instanceof Error) {
-//             res.send({message:error.message})
-//         } else {
-//             res.send({message:"Erro inesperado"})
-//         }
-//     }
-// })
-
+//Editar purchases
 app.put('/purchases/:id',async (req: Request, res: Response) =>{
     try {
         const id = req.params.id
@@ -704,7 +645,7 @@ app.get('/user/:id/purchases/',  async (req: Request, res: Response) => {
     try {
         const id = req.params.id
 
-        const result = await db("purchases")
+        const result :TPurchase[] | undefined[] = await db("purchases")
         .select("id","buyer_id AS buyerID","total_price AS totalPrice","paid AS isPAid", "delivered_at AS deliveredAt","create_at AS createAt")
         .where({buyer_id:id})
 
@@ -736,7 +677,7 @@ app.get('/user/:id/purchases/',  async (req: Request, res: Response) => {
 app.get('/purchases/:id', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const [purchase] = await db("purchases").where({id:id})
+        const [purchase] : TPurchase[] | undefined[] = await db("purchases").where({id:id})
         if(purchase){
             
             const [cart] = await db("purchases")
