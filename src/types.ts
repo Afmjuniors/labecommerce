@@ -1,3 +1,5 @@
+import { type } from "os"
+
 export type TUser = {
     id: string,
     name:string,
@@ -35,8 +37,10 @@ export type TPurchaseProduct ={
     quantity:number
 }
 
+
 export enum Category{
     ACCESSORIES = "Acessórios",
     CLOTHES_AND_SHOES = "Roupas e calçados",
     ELECTRONICS = "Eletrônicos"
 }
+
