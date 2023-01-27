@@ -148,6 +148,11 @@ app.delete('/users/:id', async (req: Request, res: Response) => {
         const [user] = await db("users").where({ id: id })
 
         if (user) {
+            const [purchaseID] : TPurchase[] | undefined= await db("purchases").where({buyer_id:id})
+            if(purchaseID){
+                await db("purchase_products").del().where({purchase_id:purchaseID.id})
+                await db("purchases").del().where({id:purchaseID.id})
+            }
             await db("users").del().where({ id: id })
             res.status(200).send({ message: "User apagado com sucesso", userRemoved: user })
         } else {
@@ -512,11 +517,15 @@ app.post('/purchases', async (req: Request, res: Response) => {
         const [avaliblePurID]: TPurchase[] | undefined[] = await db("purchases").where({ id: id })
 
         if (avaliblePurID) {
-            res.status(429)
+            res.status(422)
             throw new Error("Purchase com id ja existente");
         }
 
-        if (typeof products === "object") {
+        if (typeof products !== "object") {
+            res.status(400)
+            throw new Error("products tem que ser uma array de objetos não vazio com propriedade productID e quantidade");
+           
+        } else {
             if (products.length <= 0) {
                 res.status(400)
                 throw new Error("É necessario ter ao menos uma compra");
@@ -534,12 +543,12 @@ app.post('/purchases', async (req: Request, res: Response) => {
                 if (typeof products[i].quantity !== "number" || products[i].quantity <= 0) {
                     res.status(400)
                     throw new Error("Quantidade da compra precisa ser um numero e maior que 0");
-                }
-            }
 
-        } else {
-            res.status(400)
-            throw new Error("products tem que ser uma array de objetos não vazio com propriedade productID e quantidade");
+                }
+
+            }
+          
+         
         }
 
        
@@ -557,6 +566,11 @@ app.post('/purchases', async (req: Request, res: Response) => {
 
 
         for (let i in products) {
+            if(typeof products[i].productID === "undefined"){
+                res.status(400)
+                throw new Error("products tem que ser uma array de objetos não vazio com propriedade productID e quantidade");
+                
+            }
             const purchaseProducts = {
                 purchase_id: id,
                 product_id: products[i].productID,
@@ -763,7 +777,7 @@ app.delete('/purchases/:id', async (req: Request, res: Response) => {
             res.status(400)
             throw new Error("Id de purchases precisa comecar com c");
         }
-        await db("purchase_products").del().where({ purchase_id: id })
+        await db("purchase_products").del().where({ purchase_id: id })  
         await db("purchases").del().where({ id: id })
         res.status(200).send({ message: "Purchase apgada com sucesso" })
 
@@ -779,71 +793,5 @@ app.delete('/purchases/:id', async (req: Request, res: Response) => {
         } else {
             res.send({ message: "Erro inesperado" })
         }
-    }
-})
-
-app.post("/purchases/testes", async (req: Request, res: Response) => {
-    try {
-        const id = req.body.id
-        const buyerID = req.body.buyerID
-
-        const products = req.body.products
-
-
-        let totalPrice = 0
-
-        const purchase = {
-            id,
-            buyer_id: buyerID,
-            create_at: new Date(),
-            total_price: totalPrice
-        }
-
-        await db("purchases").insert(purchase)
-
-
-        for (let i in products) {
-
-            const purchaseProducts = {
-                purchase_id: id,
-                product_id: products[i].productID,
-                quantity: products[i].quantity
-            }
-            await db("purchase_products").insert(purchaseProducts)
-            const [produto] = await db("products").select("price").where({ id: purchaseProducts.product_id })
-            totalPrice += purchaseProducts.quantity * produto.price
-        }
-
-        const produtos = await db("products")
-            .select("id", "name", "price", "description", "url_image AS urlImage", "quantity")
-            .innerJoin("purchase_products", "products.id", "=", "purchase_products.product_id")
-            .where({ purchase_id: id })
-
-
-        await db("purchases").update({ total_price: totalPrice }).where({ id: id })
-
-        const result = { ...purchase, products: produtos }
-
-        res.status(200)
-        res.send({ menssage: "menssagem", result })
-
-
-
-
-
-    } catch (error) {
-        console.log(error)
-
-        if (req.statusCode === 200) {
-            res.status(500)
-        }
-
-        if (error instanceof Error) {
-            res.send({ message: error.message })
-        } else {
-            res.send({ message: "Erro inesperado" })
-        }
-
-
     }
 })
