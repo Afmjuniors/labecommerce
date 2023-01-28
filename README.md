@@ -242,4 +242,3 @@ Alexandre Machado  - afmjuniors@gmail.com
 [Postman]: https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white
 [Postman-url]: https://www.postman.com/
 
-
