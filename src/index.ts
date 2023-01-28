@@ -1,4 +1,4 @@
-import { Category, TProduct, TPurchase, TPurchaseProduct, TUser } from "./types"
+import { Category, TCartPurchase, TProduct, TPurchase, TPurchaseProduct, TPurProduct,  TUser } from "./types"
 import express, { Request, Response } from "express"
 import cors from 'cors'
 import { db } from "./database/knex"
@@ -720,7 +720,7 @@ app.get('/purchases/:id', async (req: Request, res: Response) => {
         const [purchase]: TPurchase[] | undefined[] = await db("purchases").where({ id: id })
         if (purchase) {
 
-            const [cart] = await db("purchases")
+            const [cart] : TCartPurchase[] = await db("purchases")
                 .select(
                     "purchases.id AS purchaseID",
                     "purchases.total_price AS totalPrice",
@@ -733,7 +733,7 @@ app.get('/purchases/:id', async (req: Request, res: Response) => {
                 .innerJoin("users", "purchases.buyer_id", "=", "users.id")
                 .where({ "purchases.id": id })
 
-            const purchaseProducts = await db("purchase_products")
+            const purchaseProducts : TPurProduct[] = await db("purchase_products")
                 .select("purchase_products.product_id AS id",
                     "products.name",
                     "products.price",
@@ -743,7 +743,7 @@ app.get('/purchases/:id', async (req: Request, res: Response) => {
                 .innerJoin("products", "products.id", "=", "purchase_products.product_id")
                 .where({ purchase_id: id })
 
-            const result = { ...cart, productsList: purchaseProducts }
+            const result  = {...cart, productsList: purchaseProducts }
 
             res.status(200).send(result)
 

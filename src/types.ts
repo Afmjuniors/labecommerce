@@ -1,4 +1,12 @@
-import { type } from "os"
+
+
+
+export enum Category{
+    ACCESSORIES = "Acessórios",
+    CLOTHES_AND_SHOES = "Roupas e calçados",
+    ELECTRONICS = "Eletrônicos"
+}
+
 
 export type TUser = {
     id: string,
@@ -37,10 +45,23 @@ export type TPurchaseProduct ={
     quantity:number
 }
 
-
-export enum Category{
-    ACCESSORIES = "Acessórios",
-    CLOTHES_AND_SHOES = "Roupas e calçados",
-    ELECTRONICS = "Eletrônicos"
+export type TCartPurchase = {
+    purchaseID:string,
+    totalPrice: number,
+    createAt:string,
+    paid:number,
+    deliveredAt:string,
+    buyerID:string,
+    email:string,
+    name:string
 }
+export type TPurProduct = {
+    id:string,
+    name:string,
+    price:number,
+    description:string,
+    urlImage:string,
+    quantity:number
+}
+
 
