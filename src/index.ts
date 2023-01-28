@@ -17,9 +17,7 @@ app.listen(3003, () => {
     console.log(`serviddor rodando na porta 3003`)
 })
 
-app.get('/ping', async (req: Request, res: Response) => {
-    res.send('servidor rodando')
-})
+
 
 //users*************************************************
 app.get('/users', async (req: Request, res: Response) => {
@@ -63,7 +61,7 @@ app.get('/users', async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
         if (error instanceof Error) {
@@ -128,7 +126,7 @@ app.post('/users', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -163,7 +161,7 @@ app.delete('/users/:id', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -219,7 +217,7 @@ app.put('/users/:id', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -276,7 +274,7 @@ app.get('/products', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -306,7 +304,7 @@ app.get('/products/:id', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -375,7 +373,7 @@ app.post('/products', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -406,7 +404,7 @@ app.delete('/products/:id', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -476,7 +474,7 @@ app.put('/products/:id', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -532,6 +530,12 @@ app.post('/purchases', async (req: Request, res: Response) => {
             }
             for (let i = 0; i < products.length; i++) {
                 const [avalibleProduct] :TProduct[] | undefined[]  = await db("products").where({ id: products[i].productID })
+
+                if(typeof products[i].productID === "undefined"){
+                    res.status(400)
+                    throw new Error("products tem que ser uma array de objetos não vazio com propriedade productID e quantidade");
+                    
+                }
                 if (!avalibleProduct) {
                     res.status(404)
                     throw new Error("Produto não encontrado");
@@ -606,7 +610,7 @@ app.post('/purchases', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -665,7 +669,7 @@ app.put('/purchases/:id', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -698,7 +702,7 @@ app.get('/user/:id/purchases/', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -752,7 +756,7 @@ app.get('/purchases/:id', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
@@ -784,7 +788,7 @@ app.delete('/purchases/:id', async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
 
-        if (req.statusCode === 200) {
+        if (res.statusCode === 200) {
             res.status(500)
         }
 
