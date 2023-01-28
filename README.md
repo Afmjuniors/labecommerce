@@ -118,7 +118,16 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    npm install
    ```
-4. Run ther server
+4. Create tables in your own server
+   ```js
+   src/database/database.sql
+
+   Execute CREATE TABLE users
+   Execute CREATE TABLE products
+   Execute CREATE TABLE purchases
+   Execute CREATE TABLE purchase_products
+   ```
+5. Run ther server
    ```js
    npm run dev
    ```
